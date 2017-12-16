@@ -1,0 +1,29 @@
+{
+    "memo": "6140ec8cb74123979beb166e301ba5c8a4e0332ca9c171c1b8862b8b5e844d59",
+    "projects": [
+        {
+            "name": "github.com/jroimartin/gocui",
+            "version": "v0.3.0",
+            "revision": "4e9ce9a8e26f2ef33dfe297dbdfca148733b6b9b",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/mattn/go-runewidth",
+            "version": "v0.0.2",
+            "revision": "9e777a8366cce605130a531d2cd6363d07ad7317",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/nsf/termbox-go",
+            "branch": "master",
+            "revision": "aa4a75b1c20a2b03751b1a9f7e41d58bd6f71c43",
+            "packages": [
+                "."
+            ]
+        }
+    ]
+}
