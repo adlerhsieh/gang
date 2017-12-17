@@ -1,41 +1,52 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	// "fmt"
+	"os"
 
-	"github.com/jroimartin/gocui"
+	"github.com/nsf/termbox-go"
 )
 
 func main() {
-	g, err := gocui.NewGui(gocui.OutputNormal)
+	err := termbox.Init()
 	if err != nil {
-		log.Panicln(err)
+		panic(err)
 	}
-	defer g.Close()
+	defer termbox.Close()
 
-	g.SetManagerFunc(layout)
+	termbox.SetInputMode(termbox.InputEsc)
+	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
-	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
-		log.Panicln(err)
-	}
+	tbprint(0, 0, "localhost")
+	tbprint(0, 1, "staging")
+	tbprint(0, 2, "production")
 
-	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
-		log.Panicln(err)
-	}
-}
+	termbox.Flush()
 
-func layout(g *gocui.Gui) error {
-	maxX, maxY := g.Size()
-	if v, err := g.SetView("hello", maxX/2-7, maxY/2, maxX/2+7, maxY/2+2); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
+	for {
+		switch event := termbox.PollEvent(); event.Type {
+		case termbox.EventKey:
+			if isExit(event) {
+				os.Exit(0)
+			}
+		case termbox.EventError:
+			panic(event.Err)
 		}
-		fmt.Fprintln(v, "Hello world!")
 	}
-	return nil
 }
 
-func quit(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
+func isExit(event termbox.Event) bool {
+	if event.Key == termbox.KeyEsc ||
+		// q & Q
+		event.Ch == 113 || event.Ch == 81 {
+		return true
+	}
+	return false
+}
+
+func tbprint(x int, y int, msg string) {
+	for _, c := range msg {
+		termbox.SetCell(x, y, c, termbox.ColorDefault, termbox.ColorDefault)
+		x += 1
+	}
 }
