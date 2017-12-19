@@ -8,12 +8,6 @@ import (
 
 var dc tb.Attribute = tb.ColorDefault
 
-type View struct {
-	Data        []string
-	Render      func()
-	HandleEvent func(tb.Event)
-}
-
 var (
 	viewCurrent     View
 	viewConnections View
@@ -58,11 +52,4 @@ func isExit(event tb.Event) bool {
 		return true
 	}
 	return false
-}
-
-func tbprint(x int, y int, msg string, fg tb.Attribute, bg tb.Attribute) {
-	for _, c := range msg {
-		tb.SetCell(x, y, c, fg, bg)
-		x += 1
-	}
 }
