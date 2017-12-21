@@ -5,7 +5,7 @@ import (
 )
 
 type View struct {
-	Data        []string
+	Data        interface{}
 	Render      func()
 	HandleEvent func(tb.Event)
 }

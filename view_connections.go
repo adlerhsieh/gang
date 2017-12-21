@@ -5,17 +5,36 @@ import (
 )
 
 var connectionIndex int
-var connections []string = []string{"localhost", "staging", "production"}
+
+// var connections []string = []string{"localhost", "production"}
 
 func initViewConnections() View {
-	return View{
-		Data:        connections,
-		Render:      ViewConnectionsRender,
-		HandleEvent: ViewConnectionsHandleEvent,
-	}
+
+	// connections := []map[string]string{
+	// 	"localhost": map[string]string{
+	// 		"host":     "localhost",
+	// 		"port":     "3306",
+	// 		"username": "root",
+	// 		"password": "12345678",
+	// 	},
+	// }
+
+	var connections []string = []string{"localhost", "production", "staging"}
+
+	view := View{}
+	view.Data = connections
+	view.Render = view.ViewConnectionsRender
+	view.HandleEvent = view.ViewConnectionsHandleEvent
+	return view
+
+	// return View{
+	// 	Data:        connections,
+	// 	Render:      ViewConnectionsRender,
+	// 	HandleEvent: ViewConnectionsHandleEvent,
+	// }
 }
 
-func ViewConnectionsHandleEvent(event tb.Event) {
+func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 	switch event.Ch {
 	// j
 	case 106:
@@ -26,13 +45,15 @@ func ViewConnectionsHandleEvent(event tb.Event) {
 	}
 }
 
-func ViewConnectionsRender() {
+func (this *View) ViewConnectionsRender() {
 	var xOffset int = 0
 	var yOffset int = 3
 
 	tbprint(xOffset, 0, "-----------", dc, dc)
 	tbprint(xOffset, 1, "Connections", dc, dc)
 	tbprint(xOffset, 2, "-----------", dc, dc)
+
+	connections := this.Data.([]string)
 
 	for i := 0; i < len(connections); i++ {
 		if connectionIndex < 0 {

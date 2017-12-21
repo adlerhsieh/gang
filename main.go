@@ -26,6 +26,7 @@ func main() {
 	}
 	defer tb.Close()
 
+	// renderAll(viewCurrent)
 	viewCurrent.Render()
 
 	tb.SetInputMode(tb.InputEsc)
@@ -39,11 +40,21 @@ func main() {
 			if isExit(event) {
 				os.Exit(0)
 			}
+			// handleEvent(viewCurrent, event)
+			// renderAll(viewCurrent)
 			viewCurrent.HandleEvent(event)
 			viewCurrent.Render()
 		}
 	}
 }
+
+// func render(view View) {
+// 	view.Render()
+// }
+//
+// func handleEvent(view View, event tb.Event) {
+// 	view.HandleEvent(event)
+// }
 
 func isExit(event tb.Event) bool {
 	if event.Key == tb.KeyEsc ||
