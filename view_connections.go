@@ -4,44 +4,50 @@ import (
 	tb "github.com/nsf/termbox-go"
 )
 
-var connectionIndex int
-
-// var connections []string = []string{"localhost", "production"}
-
 func initViewConnections() View {
+	connections := []map[string]string{
+		map[string]string{
+			"name":     "localhost",
+			"host":     "localhost",
+			"port":     "3306",
+			"username": "root",
+			"password": "",
+		},
+		map[string]string{
+			"name":     "production",
+			"host":     "localhost",
+			"port":     "3306",
+			"username": "root",
+			"password": "",
+		},
+		map[string]string{
+			"name":     "staging",
+			"host":     "localhost",
+			"port":     "3306",
+			"username": "root",
+			"password": "",
+		},
+	}
 
-	// connections := []map[string]string{
-	// 	"localhost": map[string]string{
-	// 		"host":     "localhost",
-	// 		"port":     "3306",
-	// 		"username": "root",
-	// 		"password": "12345678",
-	// 	},
-	// }
+	data := make(map[string]interface{})
+	data["connections"] = connections
 
-	var connections []string = []string{"localhost", "production", "staging"}
-
-	view := View{}
-	view.Data = connections
+	view := View{
+		Data: data,
+	}
 	view.Render = view.ViewConnectionsRender
 	view.HandleEvent = view.ViewConnectionsHandleEvent
 	return view
-
-	// return View{
-	// 	Data:        connections,
-	// 	Render:      ViewConnectionsRender,
-	// 	HandleEvent: ViewConnectionsHandleEvent,
-	// }
 }
 
 func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 	switch event.Ch {
 	// j
 	case 106:
-		connectionIndex += 1
+		this.CursorIndex += 1
 	// k
 	case 107:
-		connectionIndex -= 1
+		this.CursorIndex -= 1
 	}
 }
 
@@ -53,19 +59,19 @@ func (this *View) ViewConnectionsRender() {
 	tbprint(xOffset, 1, "Connections", dc, dc)
 	tbprint(xOffset, 2, "-----------", dc, dc)
 
-	connections := this.Data.([]string)
+	connections := this.Data.(map[string]interface{})["connections"].([]map[string]string)
 
 	for i := 0; i < len(connections); i++ {
-		if connectionIndex < 0 {
-			connectionIndex = 0
+		if this.CursorIndex < 0 {
+			this.CursorIndex = 0
 		}
-		if connectionIndex > len(connections)-1 {
-			connectionIndex = len(connections) - 1
+		if this.CursorIndex > len(connections)-1 {
+			this.CursorIndex = len(connections) - 1
 		}
-		if i == connectionIndex {
-			tbprint(xOffset, i+yOffset, "➜ "+connections[i], dc, tb.ColorGreen)
+		if i == this.CursorIndex {
+			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, tb.ColorGreen)
 		} else {
-			tbprint(xOffset, i+yOffset, "➜ "+connections[i], dc, dc)
+			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, dc)
 		}
 	}
 	tb.Flush()

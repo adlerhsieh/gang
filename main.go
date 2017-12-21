@@ -26,7 +26,6 @@ func main() {
 	}
 	defer tb.Close()
 
-	// renderAll(viewCurrent)
 	viewCurrent.Render()
 
 	tb.SetInputMode(tb.InputEsc)
@@ -41,7 +40,6 @@ func main() {
 				os.Exit(0)
 			}
 			// handleEvent(viewCurrent, event)
-			// renderAll(viewCurrent)
 			viewCurrent.HandleEvent(event)
 			viewCurrent.Render()
 		}

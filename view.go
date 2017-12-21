@@ -8,6 +8,7 @@ type View struct {
 	Data        interface{}
 	Render      func()
 	HandleEvent func(tb.Event)
+	CursorIndex int
 }
 
 func tbprint(x int, y int, msg string, fg tb.Attribute, bg tb.Attribute) {
