@@ -37,10 +37,15 @@ func initViewConnections() View {
 	}
 	view.Render = view.ViewConnectionsRender
 	view.HandleEvent = view.ViewConnectionsHandleEvent
+	view.State = "selection"
 	return view
 }
 
 func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
+	if event.Key == tb.KeyEnter {
+		this.State = "connecting"
+		return
+	}
 	switch event.Ch {
 	// j
 	case 106:
@@ -75,7 +80,7 @@ func (this *View) ViewConnectionsRender() {
 			this.CursorIndex = len(connections) - 1
 		}
 		if i == this.CursorIndex {
-			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, tb.ColorGreen)
+			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, 7)
 		} else {
 			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, dc)
 		}
@@ -87,6 +92,10 @@ func (this *View) ViewConnectionsRender() {
 	tbprint(31, 4, "Post:     "+currentConnection["port"], dc, dc)
 	tbprint(31, 5, "Username: "+currentConnection["username"], dc, dc)
 	tbprint(31, 6, "Password: "+currentConnection["password"], dc, dc)
+
+	if this.State == "connecting" {
+		tbprint(31, 8, "Connecting...", dc, dc)
+	}
 
 	// for j := 1; j < 20; j++ {
 	// 	tbprint(26, j, "|", dc, dc)
