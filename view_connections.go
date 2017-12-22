@@ -11,21 +11,21 @@ func initViewConnections() View {
 			"host":     "localhost",
 			"port":     "3306",
 			"username": "root",
-			"password": "",
+			"password": "12345678",
 		},
 		map[string]string{
 			"name":     "production",
 			"host":     "localhost",
-			"port":     "3306",
+			"port":     "3307",
 			"username": "root",
-			"password": "",
+			"password": "asdf1234",
 		},
 		map[string]string{
 			"name":     "staging",
 			"host":     "localhost",
-			"port":     "3306",
+			"port":     "3308",
 			"username": "root",
-			"password": "",
+			"password": "99889900",
 		},
 	}
 
@@ -52,14 +52,20 @@ func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 }
 
 func (this *View) ViewConnectionsRender() {
-	var xOffset int = 0
+	var xOffset int = 1
 	var yOffset int = 3
 
-	tbprint(xOffset, 0, "-----------", dc, dc)
-	tbprint(xOffset, 1, "Connections", dc, dc)
-	tbprint(xOffset, 2, "-----------", dc, dc)
+	// tbprint(xOffset, 0, "--------------------------", dc, dc)
+	tbprint(xOffset, 1, "⚡️ Quick Connection", dc, dc)
+	// tbprint(xOffset, 2, "--------------------------", dc, dc)
 
 	connections := this.Data.(map[string]interface{})["connections"].([]map[string]string)
+
+	if len(connections) == 0 {
+		connections = append(connections, map[string]string{
+			"name": "none",
+		})
+	}
 
 	for i := 0; i < len(connections); i++ {
 		if this.CursorIndex < 0 {
@@ -74,5 +80,17 @@ func (this *View) ViewConnectionsRender() {
 			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, dc)
 		}
 	}
+
+	tbprint(31, 1, "🔎  Connection Details", dc, dc)
+	currentConnection := connections[this.CursorIndex]
+	tbprint(31, 3, "Host:     "+currentConnection["host"], dc, dc)
+	tbprint(31, 4, "Post:     "+currentConnection["port"], dc, dc)
+	tbprint(31, 5, "Username: "+currentConnection["username"], dc, dc)
+	tbprint(31, 6, "Password: "+currentConnection["password"], dc, dc)
+
+	// for j := 1; j < 20; j++ {
+	// 	tbprint(26, j, "|", dc, dc)
+	// }
+
 	tb.Flush()
 }

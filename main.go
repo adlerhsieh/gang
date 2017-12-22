@@ -7,6 +7,12 @@ import (
 )
 
 var dc tb.Attribute = tb.ColorDefault
+var window Window
+
+type Window struct {
+	Width  int
+	Height int
+}
 
 var (
 	viewCurrent     View
@@ -14,6 +20,7 @@ var (
 )
 
 func init() {
+	window.Width, window.Height = tb.Size()
 	viewConnections = initViewConnections()
 
 	viewCurrent = viewConnections
@@ -39,20 +46,11 @@ func main() {
 			if isExit(event) {
 				os.Exit(0)
 			}
-			// handleEvent(viewCurrent, event)
 			viewCurrent.HandleEvent(event)
 			viewCurrent.Render()
 		}
 	}
 }
-
-// func render(view View) {
-// 	view.Render()
-// }
-//
-// func handleEvent(view View, event tb.Event) {
-// 	view.HandleEvent(event)
-// }
 
 func isExit(event tb.Event) bool {
 	if event.Key == tb.KeyEsc ||
