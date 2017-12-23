@@ -13,11 +13,23 @@ func updateViewDatabases(db *sql.DB) {
 	viewDatabases.Data = data
 	viewDatabases.HandleEvent = viewDatabases.ViewDatabasesHandleEvent
 	viewDatabases.Render = viewDatabases.ViewDatabasesRender
-	viewDatabases.State = "connecting"
+	viewDatabases.State = "loading"
 	viewDatabases.CursorIndex = 0
 }
 
 func (this *View) ViewDatabasesHandleEvent(event tb.Event) {
+	if event.Key == tb.KeyEnter {
+		databaseName := this.Data["databases"].([]string)[this.CursorIndex]
+		connection := viewConnections.CurrentConnection()
+		db, err := sql.Open("mysql", connectionString(connection["username"], connection["password"], databaseName))
+		if err != nil {
+			panic(err)
+		}
+
+		updateViewTables(db)
+		viewCurrent = viewTables
+	}
+
 	switch event.Ch {
 	// j
 	case 106:
@@ -28,18 +40,14 @@ func (this *View) ViewDatabasesHandleEvent(event tb.Event) {
 	}
 }
 
-func (this *View) getDatabases() {
-	this.SaveQuery("databases", "show databases;")
-}
-
 func (this *View) ViewDatabasesRender() {
 	tb.Clear(dc, dc)
 
 	var xOffset int = 1
 	var yOffset int = 3
 
-	if this.State == "connecting" {
-		this.getDatabases()
+	if this.State == "loading" {
+		this.SaveQuery("databases", "show databases;")
 		this.State = "navigation"
 	}
 

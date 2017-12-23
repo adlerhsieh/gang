@@ -65,3 +65,7 @@ func (this *View) SaveQuery(key string, statement string) {
 
 	this.Data[key] = vs
 }
+
+func connectionString(username string, password string, database string) string {
+	return username + ":" + password + "@/" + database
+}

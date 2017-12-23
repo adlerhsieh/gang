@@ -46,13 +46,7 @@ func initViewConnections() View {
 func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 	if event.Key == tb.KeyEnter {
 		connection := this.CurrentConnection()
-
-		connectionString := connection["username"] +
-			":" +
-			connection["password"] +
-			"@/"
-
-		db, err := sql.Open("mysql", connectionString)
+		db, err := sql.Open("mysql", connectionString(connection["username"], connection["password"], ""))
 		if err != nil {
 			panic(err)
 		}

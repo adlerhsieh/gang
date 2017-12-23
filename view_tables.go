@@ -13,53 +13,47 @@ func updateViewTables(db *sql.DB) {
 	viewTables.Data = data
 	viewTables.HandleEvent = viewTables.ViewTablesHandleEvent
 	viewTables.Render = viewTables.ViewTablesRender
-	viewTables.State = "connecting"
+	viewTables.State = "loading"
+	viewDatabases.CursorIndex = 0
 }
 
 func (this *View) ViewTablesHandleEvent(event tb.Event) {
+	switch event.Ch {
+	// j
+	case 106:
+		this.CursorIndex += 1
+	// k
+	case 107:
+		this.CursorIndex -= 1
+	}
 }
 
 func (this *View) ViewTablesRender() {
 	tb.Clear(dc, dc)
 
-	rows, err := this.DB().Query("show databases;")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
+	var xOffset int = 1
+	var yOffset int = 3
 
-	columns, err := rows.Columns()
-	if err != nil {
-		panic(err.Error())
+	if this.State == "loading" {
+		this.SaveQuery("tables", "show tables;")
+		this.State = "navigation"
 	}
 
-	values := make([]sql.RawBytes, len(columns))
+	tbprint(xOffset, 1, "Tables", dc, dc)
 
-	scanArgs := make([]interface{}, len(values))
-	for i := range values {
-		scanArgs[i] = &values[i]
-	}
-
-	vs := []string{}
-	for rows.Next() {
-		err = rows.Scan(scanArgs...)
-		if err != nil {
-			panic(err.Error())
+	tableNames := this.Data["tables"].([]string)
+	for i, tableName := range tableNames {
+		if this.CursorIndex < 0 {
+			this.CursorIndex = 0
 		}
-
-		var value string
-		for _, col := range values {
-			if col == nil {
-				value = "NULL"
-			} else {
-				value = string(col)
-			}
-			vs = append(vs, value)
+		if this.CursorIndex > len(tableNames)-1 {
+			this.CursorIndex = len(tableNames) - 1
 		}
-	}
-
-	for i, v := range vs {
-		tbprint(0, i, v, dc, dc)
+		if i == this.CursorIndex {
+			tbprint(xOffset, i+yOffset, "➜ "+tableName, dc, 7)
+		} else {
+			tbprint(xOffset, i+yOffset, "➜ "+tableName, dc, dc)
+		}
 	}
 
 	tb.Flush()
