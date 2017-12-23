@@ -6,25 +6,21 @@ import (
 	"database/sql"
 )
 
-func updateViewTables(db *sql.DB) {
+func updateViewDatabases(db *sql.DB) {
 	data := make(map[string]interface{})
 	data["db"] = db
 
-	viewTables.Data = data
-	viewTables.HandleEvent = viewTables.ViewTablesHandleEvent
-	viewTables.Render = viewTables.ViewTablesRender
-	viewTables.State = "connecting"
+	viewDatabases.Data = data
+	viewDatabases.HandleEvent = viewDatabases.ViewDatabasesHandleEvent
+	viewDatabases.Render = viewDatabases.ViewDatabasesRender
+	viewDatabases.State = "connecting"
 }
 
-func (this *View) ViewTablesHandleEvent(event tb.Event) {
+func (this *View) ViewDatabasesHandleEvent(event tb.Event) {
 }
 
-func (this *View) ViewTablesRender() {
+func (this *View) ViewDatabasesRender() {
 	tb.Clear(dc, dc)
-
-	// if this.State == "connecting" {
-	// 	tbprint(0, 0, "Connecting...", dc, dc)
-	// }
 
 	rows, err := this.DB().Query("show databases;")
 	if err != nil {

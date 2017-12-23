@@ -19,6 +19,7 @@ var (
 
 	viewCurrent     View
 	viewConnections View
+	viewDatabases   View
 	viewTables      View
 )
 

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+
 	tb "github.com/nsf/termbox-go"
 )
 
@@ -17,4 +20,8 @@ func tbprint(x int, y int, msg string, fg tb.Attribute, bg tb.Attribute) {
 		tb.SetCell(x, y, c, fg, bg)
 		x += 1
 	}
+}
+
+func (this *View) DB() *sql.DB {
+	return this.Data["db"].(*sql.DB)
 }

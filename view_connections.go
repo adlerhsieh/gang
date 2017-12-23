@@ -50,16 +50,16 @@ func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 		connectionString := connection["username"] +
 			":" +
 			connection["password"] +
-			"@/" +
-			"gorm"
+			"@/"
 
 		db, err := sql.Open("mysql", connectionString)
 		if err != nil {
 			panic(err)
 		}
 
-		updateViewTables(db)
-		viewCurrent = viewTables
+		// updateViewTables(db)
+		updateViewDatabases(db)
+		viewCurrent = viewDatabases
 
 		// data := this.Data.(map[string]interface{})
 		// data["connection"] = conn
