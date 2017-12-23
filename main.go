@@ -15,8 +15,11 @@ type Window struct {
 }
 
 var (
+	globalLock bool
+
 	viewCurrent     View
 	viewConnections View
+	viewTables      View
 )
 
 func init() {

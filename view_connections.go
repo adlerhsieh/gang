@@ -2,6 +2,9 @@ package main
 
 import (
 	tb "github.com/nsf/termbox-go"
+
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func initViewConnections() View {
@@ -11,7 +14,7 @@ func initViewConnections() View {
 			"host":     "localhost",
 			"port":     "3306",
 			"username": "root",
-			"password": "12345678",
+			"password": "etufo32",
 		},
 		map[string]string{
 			"name":     "production",
@@ -37,13 +40,31 @@ func initViewConnections() View {
 	}
 	view.Render = view.ViewConnectionsRender
 	view.HandleEvent = view.ViewConnectionsHandleEvent
-	view.State = "selection"
 	return view
 }
 
 func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 	if event.Key == tb.KeyEnter {
-		this.State = "connecting"
+		connection := this.CurrentConnection()
+
+		connectionString := connection["username"] +
+			":" +
+			connection["password"] +
+			"@/" +
+			"gorm"
+
+		db, err := sql.Open("mysql", connectionString)
+		if err != nil {
+			panic(err)
+		}
+
+		updateViewTables(db)
+		viewCurrent = viewTables
+
+		// data := this.Data.(map[string]interface{})
+		// data["connection"] = conn
+		// this.Data = data
+
 		return
 	}
 	switch event.Ch {
@@ -56,15 +77,24 @@ func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 	}
 }
 
+func (this *View) GetConnections() []map[string]string {
+	return this.Data["connections"].([]map[string]string)
+}
+
+func (this *View) CurrentConnection() map[string]string {
+	connections := this.GetConnections()
+	return connections[this.CursorIndex]
+}
+
 func (this *View) ViewConnectionsRender() {
+	tb.Clear(dc, dc)
+
 	var xOffset int = 1
 	var yOffset int = 3
 
-	// tbprint(xOffset, 0, "--------------------------", dc, dc)
 	tbprint(xOffset, 1, "⚡️ Quick Connection", dc, dc)
-	// tbprint(xOffset, 2, "--------------------------", dc, dc)
 
-	connections := this.Data.(map[string]interface{})["connections"].([]map[string]string)
+	connections := this.GetConnections()
 
 	if len(connections) == 0 {
 		connections = append(connections, map[string]string{
@@ -92,14 +122,6 @@ func (this *View) ViewConnectionsRender() {
 	tbprint(31, 4, "Post:     "+currentConnection["port"], dc, dc)
 	tbprint(31, 5, "Username: "+currentConnection["username"], dc, dc)
 	tbprint(31, 6, "Password: "+currentConnection["password"], dc, dc)
-
-	if this.State == "connecting" {
-		tbprint(31, 8, "Connecting...", dc, dc)
-	}
-
-	// for j := 1; j < 20; j++ {
-	// 	tbprint(26, j, "|", dc, dc)
-	// }
 
 	tb.Flush()
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type View struct {
-	Data        interface{}
+	Data        map[string]interface{}
 	Render      func()
 	HandleEvent func(tb.Event)
 	CursorIndex int
