@@ -22,10 +22,6 @@ func (this *View) ViewTablesHandleEvent(event tb.Event) {
 func (this *View) ViewTablesRender() {
 	tb.Clear(dc, dc)
 
-	// if this.State == "connecting" {
-	// 	tbprint(0, 0, "Connecting...", dc, dc)
-	// }
-
 	rows, err := this.DB().Query("show databases;")
 	if err != nil {
 		panic(err.Error())
