@@ -14,7 +14,7 @@ func initViewConnections() View {
 			"host":     "localhost",
 			"port":     "3306",
 			"username": "root",
-			"password": "etufo32",
+			"password": "12345678",
 		},
 		map[string]string{
 			"name":     "production",
