@@ -62,9 +62,9 @@ func (this *View) ViewDatabasesRender() {
 			this.CursorIndex = len(databaseNames) - 1
 		}
 		if i == this.CursorIndex {
-			tbprint(xOffset, i+yOffset, "➜ "+databaseName, dc, 7)
-		} else {
 			tbprint(xOffset, i+yOffset, "➜ "+databaseName, dc, dc)
+		} else {
+			tbprint(xOffset, i+yOffset, "  "+databaseName, dc, dc)
 		}
 	}
 

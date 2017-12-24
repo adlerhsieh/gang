@@ -104,9 +104,9 @@ func (this *View) ViewConnectionsRender() {
 			this.CursorIndex = len(connections) - 1
 		}
 		if i == this.CursorIndex {
-			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, 7)
-		} else {
 			tbprint(xOffset, i+yOffset, "➜ "+connections[i]["name"], dc, dc)
+		} else {
+			tbprint(xOffset, i+yOffset, "  "+connections[i]["name"], dc, dc)
 		}
 	}
 

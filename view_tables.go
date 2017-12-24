@@ -50,9 +50,9 @@ func (this *View) ViewTablesRender() {
 			this.CursorIndex = len(tableNames) - 1
 		}
 		if i == this.CursorIndex {
-			tbprint(xOffset, i+yOffset, "➜ "+tableName, dc, 7)
-		} else {
 			tbprint(xOffset, i+yOffset, "➜ "+tableName, dc, dc)
+		} else {
+			tbprint(xOffset, i+yOffset, "  "+tableName, dc, dc)
 		}
 	}
 
