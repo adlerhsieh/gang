@@ -19,6 +19,9 @@ func updateViewTables(db *sql.DB) {
 
 func (this *View) ViewTablesHandleEvent(event tb.Event) {
 	switch event.Ch {
+	// q
+	case 113:
+		viewCurrent = viewDatabases
 	// j
 	case 106:
 		this.CursorIndex += 1

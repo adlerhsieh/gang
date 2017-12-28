@@ -31,6 +31,9 @@ func (this *View) ViewDatabasesHandleEvent(event tb.Event) {
 	}
 
 	switch event.Ch {
+	// q
+	case 113:
+		viewCurrent = viewConnections
 	// j
 	case 106:
 		this.CursorIndex += 1

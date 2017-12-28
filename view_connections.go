@@ -5,6 +5,7 @@ import (
 
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 func initViewConnections() View {
@@ -62,6 +63,9 @@ func (this *View) ViewConnectionsHandleEvent(event tb.Event) {
 		return
 	}
 	switch event.Ch {
+	// q
+	case 113:
+		os.Exit(0)
 	// j
 	case 106:
 		this.CursorIndex += 1
