@@ -50,6 +50,9 @@ func main() {
 			if isExit(event) {
 				os.Exit(0)
 			}
+			if isLocked() {
+				continue
+			}
 			viewCurrent.HandleEvent(event)
 			viewCurrent.Render()
 		}
@@ -58,9 +61,23 @@ func main() {
 
 func isExit(event tb.Event) bool {
 	if event.Key == tb.KeyEsc ||
+		// Q
+		event.Ch == 81 {
 		// q & Q
-		event.Ch == 113 || event.Ch == 81 {
+		// event.Ch == 113 || event.Ch == 81 {
 		return true
 	}
 	return false
+}
+
+func isLocked() bool {
+	return globalLock
+}
+
+func lock() {
+	globalLock = true
+}
+
+func unlock() {
+	globalLock = false
 }
