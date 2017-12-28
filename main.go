@@ -21,6 +21,7 @@ var (
 	viewConnections View
 	viewDatabases   View
 	viewTables      View
+	viewRows        View
 )
 
 func init() {

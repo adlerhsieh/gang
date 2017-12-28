@@ -14,10 +14,17 @@ func updateViewTables(db *sql.DB) {
 	viewTables.HandleEvent = viewTables.ViewTablesHandleEvent
 	viewTables.Render = viewTables.ViewTablesRender
 	viewTables.State = "loading"
-	viewDatabases.CursorIndex = 0
+	viewTables.CursorIndex = 0
 }
 
 func (this *View) ViewTablesHandleEvent(event tb.Event) {
+	if event.Key == tb.KeyEnter {
+		currentTable := this.Data["tables"].([]string)[this.CursorIndex]
+
+		updateViewRows(this.Data["db"].(*sql.DB), currentTable)
+		viewCurrent = viewRows
+	}
+
 	switch event.Ch {
 	// q
 	case 113:
