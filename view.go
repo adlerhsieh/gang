@@ -37,6 +37,7 @@ func (this *View) SaveQuery(key string, statement string) {
 	if err != nil {
 		panic(err.Error())
 	}
+	this.Data[key+"_columns"] = columns
 
 	values := make([]sql.RawBytes, len(columns))
 
@@ -45,13 +46,14 @@ func (this *View) SaveQuery(key string, statement string) {
 		scanArgs[i] = &values[i]
 	}
 
-	vs := []string{}
+	square := [][]string{}
 	for rows.Next() {
 		err = rows.Scan(scanArgs...)
 		if err != nil {
 			panic(err.Error())
 		}
 
+		var row []string
 		var value string
 		for _, col := range values {
 			if col == nil {
@@ -59,11 +61,23 @@ func (this *View) SaveQuery(key string, statement string) {
 			} else {
 				value = string(col)
 			}
-			vs = append(vs, value)
+			row = append(row, value)
 		}
+
+		square = append(square, row)
 	}
 
-	this.Data[key] = vs
+	this.Data[key] = square
+}
+
+func flatten(square [][]string) []string {
+	list := []string{}
+	for _, slice := range square {
+		for _, ele := range slice {
+			list = append(list, ele)
+		}
+	}
+	return list
 }
 
 func connectionString(username string, password string, database string) string {

@@ -17,9 +17,13 @@ func updateViewTables(db *sql.DB) {
 	viewTables.CursorIndex = 0
 }
 
+func (this *View) TableNames() []string {
+	return flatten(this.Data["tables"].([][]string))
+}
+
 func (this *View) ViewTablesHandleEvent(event tb.Event) {
 	if event.Key == tb.KeyEnter {
-		currentTable := this.Data["tables"].([]string)[this.CursorIndex]
+		currentTable := this.TableNames()[this.CursorIndex]
 
 		updateViewRows(this.Data["db"].(*sql.DB), currentTable)
 		viewCurrent = viewRows
@@ -51,7 +55,7 @@ func (this *View) ViewTablesRender() {
 
 	tbprint(xOffset, 1, "Tables", dc, dc)
 
-	tableNames := this.Data["tables"].([]string)
+	tableNames := this.TableNames()
 	for i, tableName := range tableNames {
 		if this.CursorIndex < 0 {
 			this.CursorIndex = 0

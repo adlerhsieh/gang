@@ -17,9 +17,13 @@ func updateViewDatabases(db *sql.DB) {
 	viewDatabases.CursorIndex = 0
 }
 
+func (this *View) DatabaseNames() []string {
+	return flatten(this.Data["databases"].([][]string))
+}
+
 func (this *View) ViewDatabasesHandleEvent(event tb.Event) {
 	if event.Key == tb.KeyEnter {
-		databaseName := this.Data["databases"].([]string)[this.CursorIndex]
+		databaseName := this.DatabaseNames()[this.CursorIndex]
 		connection := viewConnections.CurrentConnection()
 		db, err := sql.Open("mysql", connectionString(connection["username"], connection["password"], databaseName))
 		if err != nil {
@@ -56,7 +60,7 @@ func (this *View) ViewDatabasesRender() {
 
 	tbprint(xOffset, 1, "Databases", dc, dc)
 
-	databaseNames := this.Data["databases"].([]string)
+	databaseNames := this.DatabaseNames()
 	for i, databaseName := range databaseNames {
 		if this.CursorIndex < 0 {
 			this.CursorIndex = 0
